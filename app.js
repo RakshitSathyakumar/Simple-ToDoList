@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const request = require("request");
 const https = require("https");
+const date=require(__dirname+'/date.js');
+
 const app = express();
 const listItems=[];
 const workItems = [];
@@ -10,29 +12,8 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", function (req, res) {
-  var options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  var today = new Date();
 
-  var day=today.toLocaleDateString("en-US",options);
-//   var today = new Date();
-  // var currDay=today.getDay();
-  // var day="";var dayName="";
-  // var days=['Sunday','Monday','Tuesday','Wednesday','Thrusday','Friday','Saturday'];
-  // if(currDay == 6 || currDay == 0)
-  // {
-  //     day="weekend 😁  ";
-  // }
-  // else{
-  //     day="weekday 😢 ";
-  // }
-  // // if(currDay == )
-  // // currDay=(currDay+13)%7;
-  // dayName=days[currDay];
+  var day=date.getDay();   
   res.render("list", {
     listTitle: day,
     listItems: listItems

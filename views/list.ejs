@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
-    <link rel="stylesheet" href="Css/styles.css">
-</head>
+<%- include("header") -%>
 <body>
     <div class="box" id="heading">
         <h1> <%=listTitle %></h1>
@@ -25,7 +18,7 @@
         <%}%>
 
         <form class="item" action="/" method="post">
-            <input type="text" name="newTodo" placeholder="New Item" autocomplete="off">
+            <input type="text" name="newTodo" placeholder="New Item" autocomplete="off" required>
             <button type="submit" name="listSubmit" value=<%= listTitle %>>+</button>
           </form>
 
@@ -33,4 +26,7 @@
 
     
 </body>
+
+<%- include("footer") -%>
+
 </html>
