@@ -1,0 +1,5 @@
+<!-- <% if(dayName == "Saturday" || dayName == "Sunday"){%>
+        <h1 style="color: blueviolet;">Today is <%= kindOfDay %>,<%=dayName%> !</h1>
+    <%}else{%>
+        <h1 style="color: gray;">Today is <%= kindOfDay %>,<%=dayName%> !</h1>
+    <%}%> -->
