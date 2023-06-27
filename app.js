@@ -4,10 +4,20 @@ const request = require("request");
 const https = require("https");
 const date = require(__dirname + "/date.js");
 const mongoose = require("mongoose");
+require('dotenv').config()
+const Item = require('./models/itemSchema');
+// const List =require('./models/listSchema');
+
 
 const app = express();
 
-const uri = "mongodb://127.0.0.1:27017/toDoListDb";
+const PORT = process.env.PORT || 3000;
+
+const uri = process.env.MONGO_URI;
+
+mongoose.set('strictQuery',false);
+
+
 mongoose
   .connect(uri)
   .then(() => {
@@ -17,12 +27,20 @@ mongoose
     console.log(err);
   });
 
-const itemSchema = new mongoose.Schema({
-  name: String,
-});
+// const itemSchema = new mongoose.Schema({
+//   name: String,
+// });
 
 let foundItems = [];
-const Item = new mongoose.model("Item", itemSchema);
+// const Item = new mongoose.model("Item", itemSchema);
+
+// const listSchema = new mongoose.Schema({
+//   name:String,
+//   items:[itemSchema]
+// });
+
+// const List = new mongoose.model("List",listSchema);
+
 // const createNewItem = async () => {
 //   const itemOne = await Item.create({
 //     name: "Welcome to ToDo liss",
@@ -42,55 +60,43 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
 app.get("/", function (req, res) {
   const findQuery = async () => {
-    let find = await Item.find().then(function(foundItems){
-
+    let find = await Item.find().then(function (foundItems) {
       // console.log(find);
-      
-        var day = date.getDay();
-  
-        // foundItems.push(find);
-        // console.log(foundItems.length);
-        if (foundItems.length === 0) {
-          // const itemOne="",itemTwo="";
-          let createNewItem = async () => {
-            let itemOne = await Item.create({
-              name: "Welcome to ToDo list",
-            });
-    
-            let itemTwo = await Item.create({
-              name: "Hit add to Add new Item",  
-            });
-    
-            foundItems = [itemOne, itemTwo];
-          };
-          createNewItem();
-          res.redirect("/");
-        }
-         else {
-          // foundItems.push(find);
-          res.render("list", {
-            listTitle: day,
-            listItems: foundItems,
+
+      var day = date.getDate();
+
+      // foundItems.push(find);
+      // console.log(foundItems.length);
+      if (foundItems.length === 0) {
+        // const itemOne="",itemTwo="";
+        let createNewItem = async () => {
+          let itemOne = await Item.create({
+            name: "Welcome to ToDo list",
           });
-        }
+
+          let itemTwo = await Item.create({
+            name: "Hit add to Add new Item",
+          });
+
+          foundItems = [itemOne, itemTwo];
+        };
+        createNewItem();
+        res.redirect("/");
+      } else {
+        // foundItems.push(find);
+        res.render("list", {
+          listTitle: day,
+          listItems: foundItems,
+        });
+      }
     });
     // {
     //   console.log("Error occurred:", err);
     // }
-
   };
   findQuery();
-});
-
-app.get("/work", function (req, res) {
-  res.render("list", {
-    listTitle: "Work List",
-    listItems: workItems,
-  });
 });
 
 app.post("/", function (req, res) {
@@ -104,7 +110,7 @@ app.post("/", function (req, res) {
     console.log(itemOne);
   };
   createNewItem();
-  
+
   res.redirect("/");
   // if (req.body.listSubmit === "Work") {
   //   workItems.push(req.body.newTodo);
@@ -126,6 +132,10 @@ app.post("/delete", function (req, res) {
   console.log("Object Deleted");
 });
 
-app.listen(3000, function (req, res) {
+app.get("/:listName",(req,res)=>{
+  console.log(req.params.listName);
+});
+
+app.listen(PORT, function (req, res) {
   console.log("Server is fine!");
 });
